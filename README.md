@@ -16,7 +16,7 @@
 
 1、创建redis对象
 
-```
+```go
 rdb := redis.NewClient(&redis.Options{
    Addr:     "192.168.56.105:6379",
    Password: "", // no password set
@@ -24,3 +24,33 @@ rdb := redis.NewClient(&redis.Options{
 
 })
 ```
+
+2、创建锁对象
+
+```go
+rr, err := NewLock(rdb, "test-redis-lock")
+if err != nil {
+   t.Fatal(err)
+}
+```
+
+```
+func NewLock(rdb *redis.Client, key string) (r *redisLock, err error) 
+参数说明：
+rdb redis 客户端指针
+key 一个锁的标识，标识不是最终的key值，实现时在后面有拼接字符标识。
+```
+
+3、获取锁
+
+```go
+r.Lock()
+```
+
+4、释放锁
+
+```go
+r.Unlock()
+```
+
+![](img\redis-lock-log.jpg)
